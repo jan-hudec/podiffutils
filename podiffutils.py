@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2013 Jan Hudec
+# Copyright 2013 Jan Hudec <bulb@ucw.cz>
 #
 # This file is not yet part of the Translate Toolkit.
 #
