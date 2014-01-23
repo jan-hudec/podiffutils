@@ -42,7 +42,7 @@ import re
 import time
 
 from translate.misc.multistring import multistring
-from translate.storage import factory, poheader, pypo
+from translate.storage import poheader, pypo
 
 class _Item(object):
     """Auxiliary class that holds info about merging state"""
@@ -243,7 +243,7 @@ class DiffUtils:
     # FIXME: Take options in __init__
 
     def load_storage(self, storefile):
-        store = factory.getobject(storefile, classes_str=_file_classes)
+        store = pypo.pofile.parsefile(storefile)
         if not isinstance(store, self.FileClass):
             raise ValueError('All files have to be in format the same format %s, but %s is in %s' % (
                 self.FileClass.Name, store.filename, store.Name))
@@ -540,15 +540,6 @@ class _PoFileDiff(DiffUtils):
 
 _differs = {
         'pofile': _PoFileDiff
-        }
-
-_file_classes = {
-        # This is a reason we have custom class list: we can only work with
-        # pypo and not cpo and fpo. The reason is that libgettextpo does not
-        # provide any method to get list of all type comments. So we use
-        # translate.storage.pypo.pyfile explicitly and rely on it's actual
-        # properties rather than the incomplete generic interface.
-        'po': ('pypo', 'pofile'), 'pot': ('po', 'pofile'),
         }
 
 def get_differ(_class):
