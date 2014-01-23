@@ -338,6 +338,12 @@ class DiffUtils:
         return [o for o in (self.merge_simple(b, l, r) for b, l, r in
             matcher.match()) if o is not None]
 
+def _getname(store, default):
+    if hasattr(store, 'filename') and store.filename:
+        return store.filename
+    else:
+        return default
+
 # TODO: This should be mostly added to translate.storage.pypo and in
 # a compatible way to other translate.storage.* classes.
 class _PoFileDiff(DiffUtils):
@@ -468,7 +474,7 @@ class _PoFileDiff(DiffUtils):
 
                 res = used.get(key, None)
                 out.addnote(u'(conflict) %(file)s (%(project)s): %(key)s: %(value)s' % {
-                    'file': getattr(ofile._store, 'filename', ('remote' if use_local else 'local')),
+                    'file': _getname(ofile._store, ('remote' if use_local else 'local')),
                     'project': other.get('Project-Id-Version', u'???'),
                     'key': key,
                     'value': other.get(key, u'<unset>'),
@@ -516,9 +522,9 @@ class _PoFileDiff(DiffUtils):
                         u"%%s\n" +
                         u"#-#-#-#-#  %s (%s)  #-#-#-#-#\n" +
                         u"%%s\n") % (
-                                getattr(local._store, 'filename', 'local'),
+                                _getname(local._store, 'local'),
                                 local._store.parseheader().get("Project-Id-Version", u"???"),
-                                getattr(remote._store, 'filename', 'remote'),
+                                _getname(remote._store, 'remote'),
                                 remote._store.parseheader().get("Project-Id-Version", u"???"))
                 while len(ls) < len(rs):
                     ls.append(u"")
